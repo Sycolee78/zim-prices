@@ -54,10 +54,8 @@
     - `main()` dispatcher for future CLI usage (`python -m zim_prices_scrapers.orchestration.jobs run_zmx_daily`).
 
 **Remaining in this phase**
-- Add minimal unit tests for `normalize_contract()` and `normalize_unit()`.
 - Add a small CLI wrapper or Makefile target to run the scraper locally.
-- Design and implement the mapping layer from normalized ZMX records into the backend DB schema (`commodity`, `market`, `price_observation`).
-- Switch `run_zmx_daily()` from printing JSON to writing via SQLAlchemy into the PostgreSQL database.
+- Switch `run_zmx_daily()` from printing JSON to writing via SQLAlchemy into the PostgreSQL database using `upsert_zmx_observation()`.
 
 ## Phase 3 - Scheduler & Automation ⏳
 
