@@ -36,17 +36,28 @@
 - Add basic error envelope / problem-details style responses (optional polish).
 - Add minimal seed script or fixtures to test endpoints quickly.
 
-## Phase 2 - Ingestion (ZMX first) ⏳
+## Phase 2 - Ingestion (ZMX first) 🚧
 
-**Planned**
-- `scrapers/zim_prices_scrapers/sources/zmx.py`:
-  - Fetch `https://system.zmx.co.zw/zmxwebpage/ATSCommo.aspx`.
-  - Parse Market Watch / Recent Orders tables.
-  - Normalize contract codes (`MAIZE/B/HRE/USD` → commodity/variant/market/currency).
-- `scrapers/zim_prices_scrapers/normalization/`:
-  - Unit and currency normalization helpers.
-- `scrapers/zim_prices_scrapers/orchestration/jobs.py`:
-  - `run_zmx_daily()` entry point to run the scraper and (eventually) upsert into `price_observation`.
+**Completed in this phase**
+- Scrapers package scaffolded in `scrapers/zim_prices_scrapers/` with `__init__.py`.
+- Normalization helpers:
+  - `normalization/contracts.py` → `normalize_contract()` for ZMX contract strings.
+  - `normalization/units.py` → `normalize_unit()` for basic unit aliases.
+- ZMX source module:
+  - `sources/zmx.py`:
+    - `fetch_zmx_tables()` → downloads `ATSCommo.aspx` and returns HTML tables as DataFrames.
+    - `extract_market_watch()` → extracts structured `ZmxObservation` records from Market Watch tables.
+    - `scrape_zmx_market_watch()` → returns normalized dicts with contract, market, unit, vwa, last, bid/ask, volume, turnover.
+- Orchestration entry point:
+  - `orchestration/jobs.py`:
+    - `run_zmx_daily()` → runs the ZMX scrape and prints JSON lines (Phase 2 debug mode).
+    - `main()` dispatcher for future CLI usage (`python -m zim_prices_scrapers.orchestration.jobs run_zmx_daily`).
+
+**Remaining in this phase**
+- Add minimal unit tests for `normalize_contract()` and `normalize_unit()`.
+- Add a small CLI wrapper or Makefile target to run the scraper locally.
+- Design and implement the mapping layer from normalized ZMX records into the backend DB schema (`commodity`, `market`, `price_observation`).
+- Switch `run_zmx_daily()` from printing JSON to writing via SQLAlchemy into the PostgreSQL database.
 
 ## Phase 3 - Scheduler & Automation ⏳
 
