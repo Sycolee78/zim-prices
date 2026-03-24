@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: zim-prices-db
+    environment:
+      POSTGRES_DB: zim_prices
+      POSTGRES_USER: zim_prices
+      POSTGRES_PASSWORD: zim_prices
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./backend
+    container_name: zim-prices-api
+    environment:
+      DATABASE_URL: postgresql+psycopg://zim_prices:zim_prices@db:5432/zim_prices
+    depends_on:
+      - db
+    ports:
+      - "8001:8000"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+volumes:
+  db_data:
+    driver: local
