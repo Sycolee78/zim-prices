@@ -1,0 +1,13 @@
+[project]
+name = "zim-prices-scrapers"
+version = "0.1.0"
+description = "Scraper workers for Zimbabwe commodity prices (ZMX, ZERA, RBZ, FPMA, tariffs)"
+requires-python = ">=3.11"
+
+[project.dependencies]
+requests = "^2.32.0"
+pandas = "^2.2.0"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
